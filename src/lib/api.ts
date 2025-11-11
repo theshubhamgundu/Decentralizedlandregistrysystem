@@ -8,6 +8,7 @@ import {
   DashboardStats,
   UserRole,
 } from '../types';
+import { sha256, calculateBlockHash, mineBlock } from '../utils/blockchain';
 
 // Mock API Base URL - Replace with your Spring Boot backend URL
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -183,7 +184,7 @@ export const transactionAPI = {
     transaction.notes = notes;
     
     // Create a new block
-    const newBlock = createBlock(transaction);
+    const newBlock = await createBlock(transaction);
     mockBlocks.push(newBlock);
     
     return transaction;
@@ -249,7 +250,7 @@ export const dashboardAPI = {
 };
 
 // Helper function to create a block
-function createBlock(transaction: Transaction): Block {
+async function createBlock(transaction: Transaction): Promise<Block> {
   const previousBlock = mockBlocks[mockBlocks.length - 1];
   const previousHash = previousBlock?.currentHash || '0000000000000000';
   
@@ -265,20 +266,26 @@ function createBlock(transaction: Transaction): Block {
       amount: transaction.amount,
     },
     previousHash,
-    nonce: Math.floor(Math.random() * 1000000),
   };
   
-  // Simple hash simulation
-  const currentHash = simpleHash(JSON.stringify(blockData));
+  // Mine the block with proof of work (difficulty = 4)
+  const { hash: currentHash, nonce } = await mineBlock(
+    blockData.blockIndex,
+    blockData.timestamp,
+    blockData.transactionData,
+    previousHash,
+    4
+  );
   
   return {
     id: Math.random().toString(36).substr(2, 9),
     ...blockData,
     currentHash,
+    nonce,
   };
 }
 
-// Simple hash function for demo
+// Simple hash function for demo (fallback)
 function simpleHash(data: string): string {
   let hash = 0;
   for (let i = 0; i < data.length; i++) {

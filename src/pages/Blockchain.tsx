@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Block } from '../types';
 import { blockAPI } from '../lib/api';
-import { BlockchainViewer } from '../components/BlockchainViewer';
+import { EnhancedBlockchainViewer } from '../components/EnhancedBlockchainViewer';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 
@@ -34,5 +34,5 @@ export function Blockchain() {
     );
   }
 
-  return <BlockchainViewer blocks={blocks} onRefresh={loadBlocks} />;
+  return <EnhancedBlockchainViewer blocks={blocks} onRefresh={loadBlocks} />;
 }

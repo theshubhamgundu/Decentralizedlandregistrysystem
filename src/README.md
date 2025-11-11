@@ -1,309 +1,280 @@
-# 🏛️ Decentralized Land Registry System (DLRS)
+# 🏛️ DLRS - Decentralized Land Registry System
 
-A modern, blockchain-powered land management platform that ensures secure property registration and ownership transfers through cryptographic verification and immutable record-keeping.
-
-![DLRS Banner](https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=300&fit=crop)
+A next-generation blockchain-powered property management platform with an enterprise-grade UI/UX. This system provides secure property registration and ownership transfers through an immutable blockchain ledger.
 
 ## ✨ Features
 
-### 🔐 Blockchain Security
-- **SHA-256 Cryptographic Hashing**: Industry-standard security for all records
-- **Proof-of-Work Mining**: Difficulty-4 mining ensures block integrity
-- **Chain Verification**: Real-time blockchain integrity verification
-- **Immutable Records**: Once recorded, ownership transfers cannot be altered
-- **Tamper Detection**: Automatically detects any modifications to historical records
+### 🎨 Modern UI/UX
+- **Glassmorphism & Gradient Design**: Beautiful modern interface with gradient effects and backdrop blur
+- **Smooth Animations**: Motion-powered transitions and micro-interactions throughout the app
+- **Responsive Layout**: Fully responsive design optimized for desktop, tablet, and mobile
+- **Dark Mode Ready**: Built with dark mode support in the design system
+- **Interactive Components**: Hover effects, loading states, and visual feedback
+
+### 🔐 Blockchain Implementation
+- **SHA-256 Hashing**: Real cryptographic hashing using Web Crypto API
+- **Proof of Work**: Mining simulation with configurable difficulty
+- **Chain Verification**: Complete blockchain integrity verification
+- **Block Explorer**: Interactive visualization with detailed block information
+- **Tamper Detection**: Automatic detection of modified blocks
+- **Merkle Trees**: Support for transaction merkle root calculation
 
 ### 👥 Role-Based Access Control
-- **Admin**: System oversight, user management, and health monitoring
-- **Inspector**: Transaction review and approval authority
-- **Seller**: Property registration and sale management
-- **Buyer**: Property browsing and purchase requests
+- **Admin**: Full system access, user management, blockchain oversight
+- **Inspector**: Review and approve/reject property transactions
+- **Seller**: Register properties and manage listings
+- **Buyer**: Browse properties and initiate purchase transactions
 
-### 🏘️ Property Management
-- Complete property registration with documents
-- Property status tracking (Registered, For Sale, Sold, Under Review)
-- Document attachment with checksum verification
-- Advanced search and filtering
-- Property ownership history via blockchain
+### 🏠 Property Management
+- **Property Registration**: Register new properties with documents
+- **Document Upload**: Attach legal documents with checksum verification
+- **Status Tracking**: Track property status (Registered, For Sale, Sold, Under Review)
+- **Advanced Search**: Filter and search properties by multiple criteria
+- **Grid & List Views**: Switch between different viewing modes
 
-### 📊 Transaction Management
-- Secure ownership transfer requests
-- Inspector approval workflow
-- Automatic blockchain record creation
-- Transaction history and audit trail
-- Real-time status updates
+### 💼 Transaction Processing
+- **Initiate Transfers**: Buyers can initiate property purchase transactions
+- **Inspector Review**: Multi-stage approval workflow
+- **Status Tracking**: Real-time transaction status updates
+- **Blockchain Recording**: Approved transactions create immutable blocks
+- **Transaction History**: Complete audit trail of all property transfers
 
-### 📈 Analytics Dashboard
-- Real-time statistics and metrics
-- Role-specific views and actions
-- Recent activity tracking
-- System health monitoring
-- Blockchain integrity status
+### 📊 Dashboard Analytics
+- **Real-time Statistics**: Live stats on properties, transactions, and blockchain
+- **Role-Specific Views**: Customized dashboard based on user role
+- **Activity Timeline**: Recent property and transaction activity
+- **System Health**: Blockchain integrity and system status monitoring
 
-## 🛠️ Tech Stack
+## 🚀 Technology Stack
 
 ### Frontend
 - **React 18** with TypeScript
-- **Tailwind CSS** for styling
-- **Shadcn/UI** components
+- **Tailwind CSS v4** for styling
 - **Motion (Framer Motion)** for animations
+- **Shadcn/ui** component library
 - **Lucide React** for icons
-- **Sonner** for notifications
-
-### Backend Options
-- **Java Spring Boot** (recommended for production)
-- **Supabase** (database and optional backend)
-
-### Database
-- **PostgreSQL** via Supabase
-- Complete schema with RLS (Row Level Security)
-- Optimized indexes for performance
+- **Sonner** for toast notifications
+- **Recharts** for data visualization
 
 ### Blockchain
-- **SHA-256** hashing algorithm
-- **Proof-of-Work** consensus mechanism
-- **Difficulty**: 4 (customizable)
-- **Web Crypto API** for hash calculations
+- **Web Crypto API** for SHA-256 hashing
+- **Proof of Work** algorithm
+- **Custom blockchain utilities**
 
-## 🚀 Quick Start
+### State Management
+- **React Context API** for authentication
+- **Local State** with React hooks
 
-### Prerequisites
-- Node.js 18 or higher
-- npm or yarn
-- Supabase account (free tier works)
-- Vercel account (for deployment)
+### Planned Backend
+- **Java Spring Boot** (to be connected)
+- **Supabase/MySQL** for database
+- **JWT** authentication
+- **REST API**
 
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/dlrs.git
-   cd dlrs
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` and add your Supabase credentials:
-   ```env
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   VITE_API_BASE_URL=http://localhost:8080/api
-   ```
-
-4. **Set up Supabase database**
-   - Go to your Supabase project
-   - Open SQL Editor
-   - Copy and paste contents of `/supabase/schema.sql`
-   - Execute the SQL script
-
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   ```
-   http://localhost:5173
-   ```
-
-## 📦 Deployment
-
-### Deploy to Vercel
-
-1. **Push your code to GitHub**
-
-2. **Import project in Vercel**
-   - Go to https://vercel.com/new
-   - Import your repository
-   - Vercel will auto-detect the Vite configuration
-
-3. **Add environment variables**
-   ```
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   ```
-
-4. **Deploy**
-   - Click "Deploy"
-   - Your app will be live in ~2 minutes
-
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
-
-## 🏗️ Architecture
+## 📁 Project Structure
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        Frontend (Vercel)                     │
-│  React + TypeScript + Tailwind CSS + Blockchain Logic       │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                ┌───────────┴──────────┐
-                │                      │
-    ┌───────────▼──────────┐  ┌────────▼────────────┐
-    │  Supabase (Database) │  │  Spring Boot (API)  │
-    │     PostgreSQL       │  │   Java Backend      │
-    └──────────────────────┘  └─────────────────────┘
+/
+├── components/
+│   ├── ui/                          # Shadcn UI components
+│   ├── EnhancedAuthForm.tsx        # Modern login/register form
+│   ├── EnhancedBlockchainViewer.tsx # Advanced blockchain explorer
+│   ├── EnhancedDashboardStats.tsx  # Animated statistics cards
+│   ├── EnhancedLayout.tsx          # Main app layout with navigation
+│   ├── EnhancedPropertyCard.tsx    # Property display card
+│   ├── ApproveTransactionDialog.tsx # Transaction approval modal
+│   ├── PropertyDetailsDialog.tsx   # Property details modal
+│   ├── RegisterPropertyDialog.tsx  # Property registration form
+│   └── TransactionCard.tsx         # Transaction display card
+│
+├── pages/
+│   ├── EnhancedDashboard.tsx       # Role-based dashboard
+│   ├── EnhancedProperties.tsx      # Property listing & management
+│   ├── EnhancedTransactions.tsx    # Transaction management
+│   ├── Blockchain.tsx              # Blockchain explorer page
+│   └── Users.tsx                   # User management (Admin only)
+│
+├── lib/
+│   ├── api.ts                      # API layer with mock data
+│   └── auth-context.tsx            # Authentication context
+│
+├── utils/
+│   └── blockchain.ts               # Blockchain cryptographic utilities
+│
+├── types/
+│   └── index.ts                    # TypeScript type definitions
+│
+└── styles/
+    └── globals.css                 # Global styles and design tokens
 ```
 
-### Data Flow
+## 🎯 Key Features Deep Dive
 
-1. **User Action** → Frontend captures user interaction
-2. **API Call** → Frontend sends request to backend
-3. **Transaction Processing** → Backend processes the request
-4. **Blockchain Mining** → On approval, new block is mined
-5. **Database Update** → Block is saved to database
-6. **Chain Verification** → Integrity is verified
-7. **UI Update** → Frontend displays the result
+### Blockchain Visualization
+- **Chain View**: Vertical blockchain display with linking animations
+- **Grid View**: Card-based block overview
+- **Expandable Blocks**: Click to see full transaction details
+- **Hash Display**: Full cryptographic hashes with color coding
+- **Verification Animation**: Progressive verification with progress indicator
+- **Tamper Detection**: Visual highlighting of compromised blocks
 
-## 🔧 Backend Integration
+### Enhanced Dashboard
+- **Animated Stats Cards**: Gradient backgrounds with hover effects
+- **Quick Actions**: Fast navigation to key features
+- **Recent Activity**: Timeline of latest properties and transactions
+- **Role-Specific Alerts**: Inspector notifications, admin system health
+- **Progress Indicators**: Visual representation of pending work
 
-### Option 1: Java Spring Boot (Recommended)
+### Property Cards
+- **Gradient Headers**: Visually distinct property cards
+- **Status Badges**: Color-coded status indicators
+- **Detailed Information**: Area, owner, price, registration date
+- **Document Indicators**: Shows attached documents count
+- **Quick Actions**: View details or initiate purchase
 
-See the `/backend-guide` folder for:
-- `application.properties.example` - Configuration template
-- `BlockchainController.java.example` - REST API controller
-- `BlockchainService.java.example` - Business logic with mining
+### Transaction Management
+- **Status Timeline**: Visual progression of transaction status
+- **Transfer Visualization**: Clear from/to ownership display
+- **Amount Highlighting**: Prominent transaction amount
+- **Action Buttons**: Role-based approve/reject functionality
+- **Notes System**: Inspector can add approval/rejection notes
 
-### Option 2: Supabase Only
+## 🔧 Installation & Setup
 
-The frontend can work directly with Supabase:
-- Update `/lib/api.ts` to use Supabase client
-- Use Supabase Edge Functions for complex operations
-- Enable Row Level Security (RLS) for data protection
+1. **Clone or access the project**
 
-## 📝 How the Blockchain Works
+2. **No installation needed!** - This project runs in Figma Make environment
 
-### Block Structure
-```typescript
-{
-  id: string;
-  blockIndex: number;
-  timestamp: string;
-  transactionData: {
-    transactionId: string;
-    propertyId: string;
-    propertyUid: string;
-    fromOwner: string;
-    toOwner: string;
-    amount: number;
-  };
-  previousHash: string;
-  currentHash: string;
-  nonce: number;
-}
+3. **Login to the app**:
+   - Username: `any username`
+   - Password: `any password`
+   - Select a role (Admin, Inspector, Seller, or Buyer)
+
+## 🎮 Usage Guide
+
+### As a Buyer
+1. Browse properties on the Properties page
+2. View property details
+3. Initiate a purchase transaction
+4. Track transaction status
+
+### As a Seller
+1. Register new properties
+2. Upload property documents
+3. Set property status to "For Sale"
+4. Monitor transaction requests
+
+### As an Inspector
+1. Review pending transactions in Transactions page
+2. Click "Review" on a transaction
+3. Approve or reject with notes
+4. Approved transactions create blockchain blocks
+
+### As an Admin
+1. Monitor system health on Dashboard
+2. View all users in Users page
+3. Verify blockchain integrity
+4. Oversee all operations
+
+## 🔐 Security Features
+
+- **Immutable Ledger**: Once a block is created, it cannot be altered
+- **Cryptographic Hashing**: SHA-256 ensures data integrity
+- **Proof of Work**: Mining difficulty prevents easy blockchain manipulation
+- **Chain Verification**: Detect any tampering in the blockchain
+- **Document Checksums**: Verify document integrity
+- **Role-Based Access**: Users can only perform authorized actions
+
+## 📱 Responsive Design
+
+The application is fully responsive across all device sizes:
+- **Desktop** (1920px+): Full layout with sidebar
+- **Laptop** (1024px-1919px): Optimized spacing
+- **Tablet** (768px-1023px): Adapted layout
+- **Mobile** (320px-767px): Mobile-first design with hamburger menu
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary Gradient**: Purple (#9333ea) to Pink (#ec4899)
+- **Secondary Gradient**: Blue to Cyan
+- **Success**: Green
+- **Warning**: Orange
+- **Error**: Red
+
+### Typography
+- **Font Family**: System fonts (-apple-system, Segoe UI, Roboto)
+- **Font Weights**: Normal (400), Medium (500)
+- **Responsive Sizing**: Scales with viewport
+
+### Animations
+- **Page Transitions**: Fade and slide effects
+- **Card Hover**: Elevation and scale
+- **Button Interactions**: Ripple and color transitions
+- **Loading States**: Smooth spinners and skeletons
+- **Blockchain Links**: Pulsing connection indicators
+
+## 🔄 API Integration (For Backend)
+
+The `/lib/api.ts` file provides a complete API layer structure. To connect to your Java Spring Boot backend:
+
+1. Update `API_BASE_URL` in `/lib/api.ts`
+2. Replace mock functions with actual fetch calls
+3. Ensure backend endpoints match the API structure
+4. Add JWT token handling
+
+Example backend endpoints needed:
+```
+POST   /api/auth/register
+POST   /api/auth/login
+GET    /api/properties
+POST   /api/properties
+GET    /api/transactions
+POST   /api/transactions
+POST   /api/transactions/:id/approve
+POST   /api/transactions/:id/reject
+GET    /api/blocks
+POST   /api/blocks/verify
+GET    /api/dashboard/stats
 ```
 
-### Mining Process
-1. Create new block with transaction data
-2. Link to previous block via `previousHash`
-3. Find a `nonce` that produces a hash starting with "0000"
-4. This proof-of-work ensures computational cost to modify history
-5. Save block with valid hash to database
+## 🚢 Deployment
 
-### Verification
-1. Recalculate hash for each block
-2. Compare with stored hash
-3. Verify `previousHash` links are intact
-4. Report any tampering attempts
+### Frontend (Vercel)
+1. Connect your repository to Vercel
+2. Configure build settings (React app)
+3. Deploy
 
-## 🎨 UI Features
-
-### Advanced Blockchain Viewer
-- **Animated Chain Visualization**: See blocks connected in real-time
-- **Interactive Block Cards**: Click to expand and view details
-- **Status Indicators**: Visual feedback for verified/tampered blocks
-- **Grid/Chain Views**: Toggle between different visualization modes
-- **Progress Indicators**: See verification progress
-- **Color-Coded Security**: Green (valid), Red (tampered), Orange (suspicious)
-
-### Responsive Design
-- Works on desktop, tablet, and mobile
-- Adaptive layouts for different screen sizes
-- Touch-friendly interface
-- Optimized animations
-
-## 🧪 Testing
-
-### Test the Blockchain
-
-1. **Login** with any credentials (demo mode)
-2. **Register a Property**:
-   - Go to Properties page
-   - Click "Register Property"
-   - Fill in details and submit
-3. **Create a Transaction**:
-   - Click on a property "For Sale"
-   - Click "Buy Property"
-   - Confirm transaction
-4. **Approve Transaction** (as Inspector):
-   - Go to Transactions page
-   - Find pending transaction
-   - Click "Approve"
-   - Add notes and confirm
-5. **View Blockchain**:
-   - Go to Blockchain page
-   - See the new block added
-   - Click "Verify Chain Integrity"
-   - Confirm all blocks are valid
-
-## 📊 Database Schema
-
-The system uses 5 main tables:
-- **users**: User accounts with roles
-- **properties**: Land property records
-- **property_documents**: Attached documents
-- **transactions**: Ownership transfer requests
-- **blocks**: Immutable blockchain ledger
-
-See `/supabase/schema.sql` for complete schema.
-
-## 🔒 Security Features
-
-- SHA-256 cryptographic hashing
-- Proof-of-work mining (difficulty 4)
-- Row Level Security (RLS) in database
-- CORS protection
-- XSS protection headers
-- Input validation
-- SQL injection prevention
-- Secure authentication tokens
+### Backend (Spring Boot + Supabase)
+1. Set up Supabase project
+2. Configure database connection in Spring Boot
+3. Deploy Spring Boot to your preferred hosting
+4. Update `API_BASE_URL` in frontend
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+This is a prototype/demo application. For production use:
+1. Implement real backend with Spring Boot
+2. Add comprehensive error handling
+3. Implement proper authentication (JWT)
+4. Add input validation
+5. Implement file upload to cloud storage
+6. Add comprehensive testing
+7. Implement logging and monitoring
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👤 Author
-
-Built with ❤️ for secure and transparent land management
+This project is provided as-is for educational and demonstration purposes.
 
 ## 🙏 Acknowledgments
 
-- Inspired by blockchain technology and land registry systems worldwide
-- Built with modern web technologies
-- Designed for transparency and security
-
-## 📞 Support
-
-For support, please open an issue in the GitHub repository.
+- **Shadcn/ui** for the beautiful component library
+- **Tailwind CSS** for the utility-first CSS framework
+- **Motion** for smooth animations
+- **Lucide** for the icon set
 
 ---
 
-**Note**: This is a demonstration system. For production use, ensure proper security audits, legal compliance, and infrastructure setup.
+**Built with ❤️ using modern web technologies and blockchain concepts**
+
+For questions or support, please refer to the documentation or create an issue.

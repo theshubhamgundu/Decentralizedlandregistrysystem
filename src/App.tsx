@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './lib/auth-context';
-import { AuthForm } from './components/AuthForm';
-import { Layout } from './components/Layout';
-import { Dashboard } from './pages/Dashboard';
-import { Properties } from './pages/Properties';
-import { Transactions } from './pages/Transactions';
+import { EnhancedAuthForm } from './components/EnhancedAuthForm';
+import { EnhancedLayout } from './components/EnhancedLayout';
+import { EnhancedDashboard } from './pages/EnhancedDashboard';
+import { EnhancedProperties } from './pages/EnhancedProperties';
+import { EnhancedTransactions } from './pages/EnhancedTransactions';
 import { Blockchain } from './pages/Blockchain';
 import { Users } from './pages/Users';
 import { Toaster } from './components/ui/sonner';
@@ -16,37 +16,38 @@ function AppContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
+        <Loader2 className="h-12 w-12 animate-spin text-purple-600 mb-4" />
+        <p className="text-gray-600">Loading DLRS...</p>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return <AuthForm />;
+    return <EnhancedAuthForm />;
   }
 
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard onNavigate={setCurrentPage} />;
+        return <EnhancedDashboard onNavigate={setCurrentPage} />;
       case 'properties':
-        return <Properties />;
+        return <EnhancedProperties />;
       case 'transactions':
-        return <Transactions />;
+        return <EnhancedTransactions />;
       case 'blockchain':
         return <Blockchain />;
       case 'users':
         return <Users />;
       default:
-        return <Dashboard onNavigate={setCurrentPage} />;
+        return <EnhancedDashboard onNavigate={setCurrentPage} />;
     }
   };
 
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <EnhancedLayout currentPage={currentPage} onNavigate={setCurrentPage}>
       {renderPage()}
-    </Layout>
+    </EnhancedLayout>
   );
 }
 
@@ -54,7 +55,7 @@ export default function App() {
   return (
     <AuthProvider>
       <AppContent />
-      <Toaster position="top-right" />
+      <Toaster position="top-right" richColors />
     </AuthProvider>
   );
 }
