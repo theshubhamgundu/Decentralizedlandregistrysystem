@@ -1,0 +1,60 @@
+# Spring Boot Application Configuration for DLRS Backend
+# Copy this file to src/main/resources/application.properties in your Spring Boot project
+
+# Application Configuration
+spring.application.name=dlrs-backend
+server.port=8080
+
+# Supabase Database Configuration
+spring.datasource.url=jdbc:postgresql://db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=your-supabase-database-password
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Connection Pool Configuration
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=5
+spring.datasource.hikari.connection-timeout=30000
+spring.datasource.hikari.idle-timeout=600000
+spring.datasource.hikari.max-lifetime=1800000
+
+# JPA/Hibernate Configuration
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.use_sql_comments=true
+spring.jpa.properties.hibernate.jdbc.batch_size=20
+spring.jpa.properties.hibernate.order_inserts=true
+spring.jpa.properties.hibernate.order_updates=true
+
+# Logging Configuration
+logging.level.root=INFO
+logging.level.com.dlrs=DEBUG
+logging.level.org.springframework.web=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# CORS Configuration
+cors.allowed.origins=http://localhost:5173,https://your-app.vercel.app
+cors.allowed.methods=GET,POST,PUT,DELETE,OPTIONS
+cors.allowed.headers=*
+cors.allow.credentials=true
+cors.max.age=3600
+
+# JWT Configuration
+jwt.secret=your-super-secret-jwt-key-change-this-in-production
+jwt.expiration=86400000
+
+# File Upload Configuration
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+file.upload.dir=./uploads
+
+# Blockchain Configuration
+blockchain.difficulty=4
+blockchain.mining.enabled=true
+
+# Production Profile
+spring.profiles.active=production

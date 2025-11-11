@@ -1,0 +1,258 @@
+package com.dlrs.service;
+
+import com.dlrs.model.Block;
+import com.dlrs.model.Transaction;
+import com.dlrs.repository.BlockRepository;
+import com.dlrs.dto.ChainVerificationResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Example Blockchain Service Implementation for Spring Boot
+ * This demonstrates how to implement blockchain functionality in Java
+ */
+@Service
+public class BlockchainService {
+
+    @Autowired
+    private BlockRepository blockRepository;
+
+    @Value("${blockchain.difficulty:4}")
+    private int difficulty;
+
+    /**
+     * Create a new block from a transaction
+     * This method implements proof-of-work mining
+     */
+    @Transactional
+    public Block createBlockFromTransaction(Transaction transaction) throws Exception {
+        Block previousBlock = getLatestBlock();
+        
+        if (previousBlock == null) {
+            throw new IllegalStateException("Genesis block not found");
+        }
+
+        Block newBlock = new Block();
+        newBlock.setId(UUID.randomUUID());
+        newBlock.setBlockIndex(previousBlock.getBlockIndex() + 1);
+        newBlock.setTimestamp(Instant.now().toString());
+        newBlock.setTransactionId(transaction.getId());
+        newBlock.setPropertyId(transaction.getPropertyId());
+        newBlock.setPropertyUid(transaction.getPropertyUid());
+        newBlock.setFromOwner(transaction.getSellerName());
+        newBlock.setToOwner(transaction.getBuyerName());
+        newBlock.setAmount(transaction.getAmount());
+        newBlock.setPreviousHash(previousBlock.getCurrentHash());
+
+        // Mine the block (proof-of-work)
+        Block minedBlock = mineBlock(newBlock);
+        
+        // Save to database
+        return blockRepository.save(minedBlock);
+    }
+
+    /**
+     * Mine a block using proof-of-work algorithm
+     */
+    private Block mineBlock(Block block) throws NoSuchAlgorithmException {
+        String target = "0".repeat(difficulty);
+        int nonce = 0;
+        String hash;
+
+        do {
+            block.setNonce(nonce);
+            hash = calculateBlockHash(block);
+            nonce++;
+        } while (!hash.startsWith(target));
+
+        block.setCurrentHash(hash);
+        return block;
+    }
+
+    /**
+     * Calculate SHA-256 hash of a block
+     */
+    private String calculateBlockHash(Block block) throws NoSuchAlgorithmException {
+        String blockData = block.getBlockIndex() +
+                         block.getTimestamp() +
+                         block.getTransactionId() +
+                         block.getPropertyId() +
+                         block.getPropertyUid() +
+                         block.getFromOwner() +
+                         block.getToOwner() +
+                         block.getAmount() +
+                         block.getPreviousHash() +
+                         block.getNonce();
+
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(blockData.getBytes(StandardCharsets.UTF_8));
+        
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        
+        return hexString.toString();
+    }
+
+    /**
+     * Verify the integrity of the entire blockchain
+     */
+    @Transactional(readOnly = true)
+    public ChainVerificationResult verifyBlockchain(Integer startIndex, Integer endIndex) {
+        List<Block> blocks;
+        
+        if (startIndex != null && endIndex != null) {
+            blocks = blockRepository.findByBlockIndexBetween(startIndex, endIndex);
+        } else {
+            blocks = blockRepository.findAllByOrderByBlockIndexAsc();
+        }
+
+        List<Integer> tamperedBlocks = new ArrayList<>();
+        List<Integer> invalidHashes = new ArrayList<>();
+        
+        try {
+            for (int i = 0; i < blocks.size(); i++) {
+                Block block = blocks.get(i);
+                
+                // Verify block's own hash
+                String calculatedHash = calculateBlockHash(block);
+                if (!calculatedHash.equals(block.getCurrentHash())) {
+                    invalidHashes.add(block.getBlockIndex());
+                }
+                
+                // Verify chain link (except genesis block)
+                if (i > 0) {
+                    Block previousBlock = blocks.get(i - 1);
+                    if (!block.getPreviousHash().equals(previousBlock.getCurrentHash())) {
+                        tamperedBlocks.add(block.getBlockIndex());
+                    }
+                }
+            }
+        } catch (NoSuchAlgorithmException e) {
+            return new ChainVerificationResult(
+                false,
+                blocks.size(),
+                0,
+                null,
+                null,
+                "Verification failed: " + e.getMessage()
+            );
+        }
+
+        boolean isValid = tamperedBlocks.isEmpty() && invalidHashes.isEmpty();
+        int verifiedBlocks = blocks.size() - tamperedBlocks.size() - invalidHashes.size();
+
+        return new ChainVerificationResult(
+            isValid,
+            blocks.size(),
+            verifiedBlocks,
+            tamperedBlocks.isEmpty() ? null : tamperedBlocks,
+            invalidHashes.isEmpty() ? null : invalidHashes,
+            isValid ? "Chain is valid" : "Chain integrity compromised"
+        );
+    }
+
+    /**
+     * Get all blocks in chronological order
+     */
+    @Transactional(readOnly = true)
+    public List<Block> getAllBlocks() {
+        return blockRepository.findAllByOrderByBlockIndexAsc();
+    }
+
+    /**
+     * Get a block by its index
+     */
+    @Transactional(readOnly = true)
+    public Block getBlockByIndex(Integer blockIndex) {
+        return blockRepository.findByBlockIndex(blockIndex).orElse(null);
+    }
+
+    /**
+     * Get the latest block in the chain
+     */
+    @Transactional(readOnly = true)
+    public Block getLatestBlock() {
+        return blockRepository.findTopByOrderByBlockIndexDesc().orElse(null);
+    }
+
+    /**
+     * Search blocks by property UID
+     */
+    @Transactional(readOnly = true)
+    public List<Block> searchBlocksByPropertyUid(String propertyUid) {
+        return blockRepository.findByPropertyUid(propertyUid);
+    }
+
+    /**
+     * Get blockchain statistics
+     */
+    @Transactional(readOnly = true)
+    public BlockchainController.BlockchainStats getBlockchainStats() {
+        Long totalBlocks = blockRepository.count();
+        Block latestBlock = getLatestBlock();
+        Integer chainHeight = latestBlock != null ? latestBlock.getBlockIndex() + 1 : 0;
+        
+        Double totalVolume = blockRepository.findAll().stream()
+            .mapToDouble(Block::getAmount)
+            .sum();
+        
+        Long uniqueProperties = blockRepository.findAll().stream()
+            .map(Block::getPropertyUid)
+            .distinct()
+            .count();
+        
+        String lastBlockTimestamp = latestBlock != null ? latestBlock.getTimestamp() : null;
+        
+        ChainVerificationResult verification = verifyBlockchain(null, null);
+        Boolean isValid = verification.isValid();
+
+        return new BlockchainController.BlockchainStats(
+            totalBlocks,
+            chainHeight,
+            totalVolume,
+            uniqueProperties,
+            lastBlockTimestamp,
+            isValid
+        );
+    }
+
+    /**
+     * Create genesis block (call this during application startup)
+     */
+    @Transactional
+    public Block createGenesisBlock() throws Exception {
+        // Check if genesis block already exists
+        if (blockRepository.findByBlockIndex(0).isPresent()) {
+            return blockRepository.findByBlockIndex(0).get();
+        }
+
+        Block genesisBlock = new Block();
+        genesisBlock.setId(UUID.randomUUID());
+        genesisBlock.setBlockIndex(0);
+        genesisBlock.setTimestamp(Instant.parse("2024-01-01T00:00:00Z").toString());
+        genesisBlock.setTransactionId(UUID.randomUUID());
+        genesisBlock.setPropertyId(UUID.randomUUID());
+        genesisBlock.setPropertyUid("GENESIS");
+        genesisBlock.setFromOwner("System");
+        genesisBlock.setToOwner("System");
+        genesisBlock.setAmount(0.0);
+        genesisBlock.setPreviousHash("0".repeat(64));
+        
+        Block minedGenesis = mineBlock(genesisBlock);
+        return blockRepository.save(minedGenesis);
+    }
+}

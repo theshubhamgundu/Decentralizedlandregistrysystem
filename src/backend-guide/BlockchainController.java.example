@@ -1,0 +1,136 @@
+package com.dlrs.controller;
+
+import com.dlrs.model.Block;
+import com.dlrs.service.BlockchainService;
+import com.dlrs.dto.ChainVerificationResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * Example Spring Boot Controller for Blockchain Operations
+ * This is a reference implementation for your Java Spring Boot backend
+ */
+@RestController
+@RequestMapping("/api/blockchain")
+@CrossOrigin(origins = "${cors.allowed.origins}")
+public class BlockchainController {
+
+    @Autowired
+    private BlockchainService blockchainService;
+
+    /**
+     * Get all blocks in the blockchain
+     * GET /api/blockchain/blocks
+     */
+    @GetMapping("/blocks")
+    public ResponseEntity<List<Block>> getAllBlocks() {
+        List<Block> blocks = blockchainService.getAllBlocks();
+        return ResponseEntity.ok(blocks);
+    }
+
+    /**
+     * Get a specific block by index
+     * GET /api/blockchain/blocks/{blockIndex}
+     */
+    @GetMapping("/blocks/{blockIndex}")
+    public ResponseEntity<Block> getBlockByIndex(@PathVariable Integer blockIndex) {
+        Block block = blockchainService.getBlockByIndex(blockIndex);
+        if (block == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(block);
+    }
+
+    /**
+     * Verify blockchain integrity
+     * GET /api/blockchain/verify
+     */
+    @GetMapping("/verify")
+    public ResponseEntity<ChainVerificationResult> verifyChain(
+            @RequestParam(required = false) Integer startIndex,
+            @RequestParam(required = false) Integer endIndex) {
+        
+        ChainVerificationResult result = blockchainService.verifyBlockchain(startIndex, endIndex);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Get blockchain statistics
+     * GET /api/blockchain/stats
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<BlockchainStats> getBlockchainStats() {
+        BlockchainStats stats = blockchainService.getBlockchainStats();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * Get the latest block
+     * GET /api/blockchain/latest
+     */
+    @GetMapping("/latest")
+    public ResponseEntity<Block> getLatestBlock() {
+        Block block = blockchainService.getLatestBlock();
+        if (block == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(block);
+    }
+
+    /**
+     * Search blocks by property UID
+     * GET /api/blockchain/search?propertyUid=PROP-XXX
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<Block>> searchBlocksByProperty(@RequestParam String propertyUid) {
+        List<Block> blocks = blockchainService.searchBlocksByPropertyUid(propertyUid);
+        return ResponseEntity.ok(blocks);
+    }
+
+    /**
+     * Inner class for blockchain statistics
+     */
+    public static class BlockchainStats {
+        private Long totalBlocks;
+        private Integer chainHeight;
+        private Double totalVolume;
+        private Long uniqueProperties;
+        private String lastBlockTimestamp;
+        private Boolean isValid;
+
+        // Constructors, getters, setters
+        public BlockchainStats() {}
+
+        public BlockchainStats(Long totalBlocks, Integer chainHeight, Double totalVolume, 
+                              Long uniqueProperties, String lastBlockTimestamp, Boolean isValid) {
+            this.totalBlocks = totalBlocks;
+            this.chainHeight = chainHeight;
+            this.totalVolume = totalVolume;
+            this.uniqueProperties = uniqueProperties;
+            this.lastBlockTimestamp = lastBlockTimestamp;
+            this.isValid = isValid;
+        }
+
+        // Getters and Setters
+        public Long getTotalBlocks() { return totalBlocks; }
+        public void setTotalBlocks(Long totalBlocks) { this.totalBlocks = totalBlocks; }
+        
+        public Integer getChainHeight() { return chainHeight; }
+        public void setChainHeight(Integer chainHeight) { this.chainHeight = chainHeight; }
+        
+        public Double getTotalVolume() { return totalVolume; }
+        public void setTotalVolume(Double totalVolume) { this.totalVolume = totalVolume; }
+        
+        public Long getUniqueProperties() { return uniqueProperties; }
+        public void setUniqueProperties(Long uniqueProperties) { this.uniqueProperties = uniqueProperties; }
+        
+        public String getLastBlockTimestamp() { return lastBlockTimestamp; }
+        public void setLastBlockTimestamp(String lastBlockTimestamp) { this.lastBlockTimestamp = lastBlockTimestamp; }
+        
+        public Boolean getIsValid() { return isValid; }
+        public void setIsValid(Boolean isValid) { this.isValid = isValid; }
+    }
+}
