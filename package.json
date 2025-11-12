@@ -4,6 +4,10 @@
       "private": true,
       "dependencies": {
             "@jsr/supabase__supabase-js": "^2.49.8",
+            "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+            "@nomiclabs/hardhat-ethers": "^2.2.0",
+            "@nomiclabs/hardhat-waffle": "^2.0.3",
+            "@openzeppelin/contracts": "^4.8.0",
             "@radix-ui/react-accordion": "^1.2.3",
             "@radix-ui/react-alert-dialog": "^1.1.6",
             "@radix-ui/react-aspect-ratio": "^1.1.2",
@@ -33,10 +37,15 @@
             "@supabase/auth-helpers-react": "^0.5.0",
             "@supabase/ssr": "^0.7.0",
             "@supabase/supabase-js": "^2.81.1",
+            "@typechain/ethers-v5": "^10.2.0",
+            "@typechain/hardhat": "^6.1.5",
             "class-variance-authority": "^0.7.1",
             "clsx": "*",
             "cmdk": "^1.1.1",
+            "dotenv": "^17.2.3",
             "embla-carousel-react": "^8.6.0",
+            "ethers": "^5.7.2",
+            "hardhat": "^2.12.7",
             "hono": "*",
             "input-otp": "^1.4.2",
             "lucide-react": "^0.487.0",
@@ -53,12 +62,14 @@
             "vaul": "^1.1.2"
       },
       "devDependencies": {
-            "@types/node": "^20.10.0",
+            "@metamask/providers": "^22.1.1",
+            "@types/node": "^20.19.25",
             "@vitejs/plugin-react-swc": "^3.10.2",
             "vite": "6.3.5"
       },
       "scripts": {
             "dev": "vite",
             "build": "vite build"
-      }
+      },
+      "type": "module"
 }

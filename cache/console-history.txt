@@ -1,0 +1,52 @@
+console.log("Ownership transferred to:", addr1.address);
+await landRegistry.transferOwnership(1, addr1.address, "New Owner");
+});
+  currentOwner: land.currentOw
+  isForSa
+  area: land.area.toS  price: land.price.toString(),
+  ownerName: land.ownerName,
+  location: land.location,
+console.log("Land Details:", {
+const land = await landRegistry.lands(1);
+});
+  isForSale: boughtLand.isForSale
+  currentOwner: boughtLand.currentOwner,
+  ownerName: boughtLand.ownerName,
+const boughtLand = awaitconsole.log("After Purchase:", {
+await landRegistry.connect(addr1).buyLand(1, "Buyer Name", { value: 200 });
+});
+  price: landForSale.price.toString()
+  isForSale: landForSale.isForSale,
+og("After Toggle for Sale:", {
+const laconsole.l
+await landRegistry.toggleForSale(1, 200);
+});
+  currentOwner: updatedLand.currentOwner
+console.log("After Transfer:", {  ownerName: updatedLand.ownerName,
+const updatedLand = await landRegistry.lands(1);
+await landRegistry.transferOwnership(1, addr1.address, "New Owner");
+});
+  currentOwner: land.currentOwner
+  isForSale: land.isForSale,
+  price: land.price.toString(),
+  area: land.area.toString(),
+  ownerName: land.ownerName,
+  location: land.location,
+const land = await landReconsole.log("Registered Land:", {
+console.log("Contract deployed to:", landRegistry.address);await landRegistry.registerLand("Test Location", "Test Owner", 1000, 100);
+await landRegistry.deployed();
+const landRegistry = await LandRegistry.deploy();
+const LandRegistry = await ethers.getContractFactory("LandRegistry");
+console.log("Addr1 address:", addr1.address);
+const [owner, addr1] = await ethers.getSigners();
+e:", boughtLand);
+const boughtLand = awaitconsole.log("After Purchas
+await landRegistry.connect(addr1).buyLand(1, "Buyer Name", { value: 200 });
+and);
+const land = await landReconsole.log("Registered Land:", l
+await landRegistry.registerLand("Test Location", "Test Owner", 1000, 100);
+.address);
+await landRegistry.deployed();console.log("Contract deployed to:", landRegistry
+dRegistry.deploy();
+const LandRegistry = await ethers.getContractFactoconst landRegistry = await Lan
+const [owner, addr1] = await ethers.getSigners();
