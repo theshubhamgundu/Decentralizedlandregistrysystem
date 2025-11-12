@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../lib/auth-context';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback } from './ui/avatar';
@@ -12,21 +12,14 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Shield,
   Sparkles,
   Bell,
   Settings,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from './ui/dropdown-menu';
 
 interface EnhancedLayoutProps {
   children: React.ReactNode;
@@ -37,6 +30,22 @@ interface EnhancedLayoutProps {
 export function EnhancedLayout({ children, currentPage, onNavigate }: EnhancedLayoutProps) {
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const navigationItems = [
     {
@@ -153,39 +162,71 @@ export function EnhancedLayout({ children, currentPage, onNavigate }: EnhancedLa
                 <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
               </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white">
-                        {user?.fullName.charAt(0) || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="hidden sm:block text-left">
-                      <p className="text-sm font-medium">{user?.fullName}</p>
-                      <p className="text-xs text-gray-500">{user?.role}</p>
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center gap-2 hover:bg-gray-100 h-10"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+                      {user?.fullName?.charAt(0) || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium">{user?.fullName || 'User'}</p>
+                    <p className="text-xs text-gray-500">{user?.role || 'Role'}</p>
+                  </div>
+                  {profileOpen ? (
+                    <ChevronUp className="h-4 w-4 ml-1 transition-transform duration-200" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 ml-1 transition-transform duration-200" />
+                  )}
+                </Button>
+
+                {profileOpen && (
+                  <div 
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-50"
+                    style={{
+                      position: 'fixed',
+                      zIndex: 1000,
+                    }}
+                  >
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-medium">{user?.fullName || 'User'}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
                     </div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col gap-1">
-                      <span>{user?.fullName}</span>
-                      <span className="text-xs text-gray-500">{user?.email}</span>
+                    <div className="py-1">
+                      <button 
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                      >
+                        <Settings className="h-4 w-4 mr-2 text-gray-600" />
+                        Profile Settings
+                      </button>
+                      <button 
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                      >
+                        <Shield className="h-4 w-4 mr-2 text-gray-600" />
+                        Account Security
+                      </button>
                     </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-600">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <div className="border-t border-gray-100"></div>
+                    <button 
+                      onClick={logout} 
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+                {profileOpen && (
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setProfileOpen(false)}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
